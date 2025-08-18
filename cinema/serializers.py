@@ -52,7 +52,8 @@ class MovieListSerializer(serializers.ModelSerializer):
         return [g.name for g in obj.genres.all()]
 
     def get_actors(self, obj):
-        return [f"{a.first_name} {a.last_name}".strip() for a in obj.actors.all()]
+        return [f"{a.first_name} {a.last_name}".strip()
+                for a in obj.actors.all()]
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
@@ -91,8 +92,8 @@ class MovieWriteSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         genres = validated_data.pop("genres", None)
         actors = validated_data.pop("actors", None)
-        for attr, val in validated_data.items():
-            setattr(instance, attr, val)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
         if genres is not None:
             instance.genres.set(genres)
@@ -111,12 +112,14 @@ class MovieSessionWriteSerializer(serializers.ModelSerializer):
 
 class MovieSessionListSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source="movie.title", read_only=True)
-    cinema_hall_name = serializers.CharField(source="cinema_hall.name", read_only=True)
+    cinema_hall_name = serializers.CharField(source="cinema_hall.name",
+                                             read_only=True)
     cinema_hall_capacity = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = MovieSession
-        fields = ("id", "show_time", "movie_title", "cinema_hall_name", "cinema_hall_capacity")
+        fields = ("id", "show_time", "movie_title",
+                  "cinema_hall_name", "cinema_hall_capacity")
 
     def get_cinema_hall_capacity(self, obj) -> int:
         return int(obj.cinema_hall.rows) * int(obj.cinema_hall.seats_in_row)
