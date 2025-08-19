@@ -35,7 +35,6 @@ class CinemaHallViewSet(viewsets.ModelViewSet):
 
 
 class MovieViewSet(viewsets.ModelViewSet):
-    # ⬇️ removed .all() after prefetch_related()
     queryset = Movie.objects.prefetch_related("genres",
                                               "actors")
 
@@ -48,7 +47,6 @@ class MovieViewSet(viewsets.ModelViewSet):
 
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
-    # ⬇️ removed .all() after select_related()
     queryset = MovieSession.objects.select_related("movie",
                                                    "cinema_hall")
 
